@@ -4,31 +4,33 @@ import logging
 import boto3
 
 LOGGER = logging.getLogger()
-DATABASE_NAME = os.getenv('APPROVAL_DB_NAME')
-SCHEMA_NAME = os.getenv('APPROVAL_DB_SCHEMA_NAME')
+APPROVAL_DB_NAME = os.getenv('APPROVAL_DB_NAME')
+INTERACTION_DB_NAME = os.getenv('INTERACTION_DB_NAME')
+APPROVAL_DB_SCHEMA_NAME = os.getenv('APPROVAL_DB_SCHEMA_NAME')
+INTERACTION_DB_SCHEMA_NAME = os.getenv('INTERACTION_DB_SCHEMA_NAME')
 DB_CLUSTER_ARN = os.getenv('APPROVAL_DB_CLUSTER_ARN')
 DB_CREDENTIALS_SECRETS_STORE_ARN = os.getenv('CREDENTIALS_SECRET')
 RDS_CLIENT = boto3.client('rds-data')
 
 
-def execute_statement_no_db(sql):
+def execute_statement_no_db(sql, schema_name):
     """ Executes SQL Statement w/o DB """
     return RDS_CLIENT.execute_statement(
         secretArn=DB_CREDENTIALS_SECRETS_STORE_ARN,
         resourceArn=DB_CLUSTER_ARN,
         sql=sql,
-        schema=SCHEMA_NAME
+        schema=schema_name
     )
 
 
-def execute_statement(sql):
+def execute_statement(sql, schema_name, db_name):
     """ Executes SQL Statement """
     return RDS_CLIENT.execute_statement(
         secretArn=DB_CREDENTIALS_SECRETS_STORE_ARN,
-        database=DATABASE_NAME,
+        database=db_name,
         resourceArn=DB_CLUSTER_ARN,
         sql=sql,
-        schema=SCHEMA_NAME
+        schema=schema_name
     )
 
 
@@ -37,9 +39,15 @@ def lambda_handler(*_):
     LOGGER.info('Got create')
     flag_table_name = os.getenv('FLAG_TABLE')
     unclogger_prompt_table_name = os.getenv('UNCLOGGER_PROMPT_TABLE')
+    user_interaction_table_name = os.getenv('USER_INTERACTION_TABLE')
+    content_interaction_table_name = os.getenv('CONTENT_INTERACTION_TABLE')
+    comment_table_name = os.getenv('COMMENT_TABLE')
 
-    # create MySQL database object
-    execute_statement_no_db(f'CREATE DATABASE IF NOT EXISTS {DATABASE_NAME}')
+    # create MySQL databases
+    execute_statement_no_db(
+        f'CREATE DATABASE IF NOT EXISTS {APPROVAL_DB_NAME}', APPROVAL_DB_SCHEMA_NAME)
+    execute_statement_no_db(
+        f'CREATE DATABASE IF NOT EXISTS {INTERACTION_DB_NAME}', INTERACTION_DB_SCHEMA_NAME)
 
     # Create Flag table
     execute_statement((
@@ -60,7 +68,7 @@ def lambda_handler(*_):
         'PRIMARY KEY (id),'
         'UNIQUE KEY contentIdFlaggerUserIdUQ (contentId,flaggerUserId)'
         ')'
-    ))
+    ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
 
     # Create Unclogger Prompt table
     execute_statement((
@@ -79,4 +87,4 @@ def lambda_handler(*_):
         'PRIMARY KEY (id),'
         'UNIQUE KEY categoryBodyLanguageUQ (category,body,language)'
         ')'
-    ))
+    ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
