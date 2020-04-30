@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: This template deploys RDS Bootstrap Function
+Parameters:
+  FunctionName:
+    Type: String
+  CredentialsSecret:
+    Type: String
+  Endpoint:
+    Type: String
+  Port:
+    Type: String
+  ApprovalDbClusterArn:
+    Type: String
+  ApprovalDbName:
+    Type: String
+  ApprovalDbSchemaName:
+    Type: String
+  FlagTable:
+    Type: String
+  UncloggerPromptTable:
+    Type: String
+  Environment:
+    Type: String
+    Default: dev
+  Application:
+    Type: String
+Resources:
+  RdsBootstrapFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Ref FunctionName
+      CodeUri: ./
+      Handler: "lambda_function.lambda_handler"
+      Environment:
+        Variables:
+          CREDENTIALS_SECRET: !Ref CredentialsSecret
+          DB_ENDPOINT: !Ref Endpoint
+          DB_PORT: !Ref Port
+          APPROVAL_DB_CLUSTER_ARN: !Ref ApprovalDbClusterArn
+          APPROVAL_DB_NAME: !Ref ApprovalDbName
+          APPROVAL_DB_SCHEMA_NAME: !Ref ApprovalDbSchemaName
+          FLAG_TABLE: !Ref FlagTable
+          UNCLOGGER_PROMPT_TABLE: !Ref UncloggerPromptTable
+          APPLICATION_TAG: !Ref Application
+          ENVIRONMENT_TAG: !Ref Environment
+      MemorySize: 128
+      Policies:
+        - AWSLambdaVPCAccessExecutionRole
+        - Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - "logs:*"
+                - "rds-data:ExecuteSql"
+                - "rds-data:ExecuteStatement"
+                - "secretsmanager:GetSecretValue"
+                - "events:PutRule"
+                - "events:DeleteRule"
+                - "events:PutTargets"
+                - "events:RemoveTargets"
+              Resource: "*"
+      Runtime: python3.8
+      Timeout: 900
+      Tags:
+        Environment: !Ref Environment
+        Application: !Ref Application
