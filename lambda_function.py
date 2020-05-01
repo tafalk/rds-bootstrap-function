@@ -127,6 +127,7 @@ def lambda_handler(*_):
         'id varchar(200) NOT NULL,'
         'userId varchar(128) NOT NULL,'
         'body varchar(255),'
+        'contentType varchar(32) NOT NULL,'
         'contentId varchar(128) NOT NULL,'
         'time varchar(32),'
         'PRIMARY KEY (id),'
