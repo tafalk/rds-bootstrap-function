@@ -88,3 +88,48 @@ def lambda_handler(*_):
         'UNIQUE KEY categoryBodyLanguageUQ (category,body,language)'
         ')'
     ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
+
+    # Create User Interaction table
+    execute_statement((
+        f'CREATE TABLE IF NOT EXISTS {user_interaction_table_name} ('
+        'id varchar(200) NOT NULL,'
+        'type varchar(32) NOT NULL,'
+        'actorUserId varchar(128) NOT NULL,'
+        'targetUserId varchar(128) NOT NULL,'
+        'time varchar(32),'
+        'PRIMARY KEY (id),'
+        'UNIQUE KEY typeActorTargetUQ (type,actorUserId,targetUserId),'
+        'INDEX (actorUserId),'
+        'INDEX (targetUserId)'
+        ')'
+    ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+
+    # Create Content Interaction table
+    execute_statement((
+        f'CREATE TABLE IF NOT EXISTS {content_interaction_table_name} ('
+        'id varchar(200) NOT NULL,'
+        'userId varchar(128) NOT NULL,'
+        'type varchar(32) NOT NULL,'
+        'contentId varchar(128) NOT NULL,'
+        'indices varchar(128) NOT NULL,'
+        'time varchar(32),'
+        'PRIMARY KEY (id),'
+        'UNIQUE KEY userTypeContentUQ (userId,type,contentId),'
+        'INDEX (userId),'
+        'INDEX (contentId)'
+        ')'
+    ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+
+    # Create Comment table
+    execute_statement((
+        f'CREATE TABLE IF NOT EXISTS {comment_table_name} ('
+        'id varchar(200) NOT NULL,'
+        'userId varchar(128) NOT NULL,'
+        'body varchar(255),'
+        'contentId varchar(128) NOT NULL,'
+        'time varchar(32),'
+        'PRIMARY KEY (id),'
+        'INDEX (userId),'
+        'INDEX (contentId)'
+        ')'
+    ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
