@@ -125,7 +125,7 @@ def lambda_handler(*_):
         'indices varchar(128) NOT NULL,'
         'time varchar(32),'
         'PRIMARY KEY (id),'
-        'UNIQUE KEY userTypeContentUQ (userId,type,contentId),'
+        'UNIQUE KEY userTypeContentUQ (userId,interactionType,contentId),'
         'INDEX (userId),'
         'INDEX (contentId)'
         ')'
