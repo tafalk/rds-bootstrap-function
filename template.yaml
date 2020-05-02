@@ -6,35 +6,35 @@ Parameters:
     Type: String
   CredentialsSecret:
     Type: String
-  ApprovalDbClusterAddress:
+  ApprDbAddress:
     Type: String
-  ApprovalDbClusterPort:
+  ApprDbPort:
     Type: String
-  InteractionDbClusterAddress:
+  IntactDbAddress:
     Type: String
-  InteractionDbClusterPort:
+  IntactDbPort:
     Type: String
-  ApprovalDbClusterArn:
+  ApprDbArn:
     Type: String
-  ApprovalDbName:
+  ApprDbName:
     Type: String
-  ApprovalDbSchemaName:
+  ApprDbSchema:
     Type: String
-  FlagTable:
+  FlagTbl:
     Type: String
-  UncloggerPromptTable:
+  UncloggerPromptTbl:
     Type: String
-  InteractionDbClusterArn:
+  IntactDbArn:
     Type: String
-  InteractionDbName:
+  IntactDbName:
     Type: String
-  InteractionDbSchemaName:
+  IntactDbSchema:
     Type: String
-  UserInteractionTable:
+  UserInteractionTbl:
     Type: String
-  ContentInteractionTable:
+  ContentInteractionTbl:
     Type: String
-  CommentTable:
+  CommentTbl:
     Type: String
   Environment:
     Type: String
@@ -51,21 +51,21 @@ Resources:
       Environment:
         Variables:
           CREDENTIALS_SECRET: !Ref CredentialsSecret
-          APPROVAL_DB_ADDRESS: !Ref ApprovalDbClusterAddress
-          APPROVAL_DB_PORT: !Ref ApprovalDbClusterPort
-          INTERACTION_DB_ADDRESS: !Ref InteractionDbClusterAddress
-          INTERACTION_DB_PORT: !Ref InteractionDbClusterPort
-          APPROVAL_DB_CLUSTER_ARN: !Ref ApprovalDbClusterArn
-          APPROVAL_DB_NAME: !Ref ApprovalDbName
-          APPROVAL_DB_SCHEMA_NAME: !Ref ApprovalDbSchemaName
-          FLAG_TABLE: !Ref FlagTable
-          UNCLOGGER_PROMPT_TABLE: !Ref UncloggerPromptTable
-          INTERACTION_DB_CLUSTER_ARN: !Ref InteractionDbClusterArn
-          INTERACTION_DB_NAME: !Ref InteractionDbName
-          INTERACTION_DB_SCHEMA_NAME: !Ref InteractionDbSchemaName
-          USER_INTERACTION_TABLE: !Ref UserInteractionTable
-          CONTENT_INTERACTION_TABLE: !Ref ContentInteractionTable
-          COMMENT_TABLE: !Ref CommentTable
+          APPROVAL_DB_ADDRESS: !Ref ApprDbAddress
+          APPROVAL_DB_PORT: !Ref ApprDbPort
+          INTERACTION_DB_ADDRESS: !Ref IntactDbAddress
+          INTERACTION_DB_PORT: !Ref IntactDbPort
+          APPROVAL_DB_CLUSTER_ARN: !Ref ApprDbArn
+          APPROVAL_DB_NAME: !Ref ApprDbName
+          APPROVAL_DB_SCHEMA_NAME: !Ref ApprDbSchema
+          FLAG_TABLE: !Ref FlagTbl
+          UNCLOGGER_PROMPT_TABLE: !Ref UncloggerPromptTbl
+          INTERACTION_DB_CLUSTER_ARN: !Ref IntactDbArn
+          INTERACTION_DB_NAME: !Ref IntactDbName
+          INTERACTION_DB_SCHEMA_NAME: !Ref IntactDbSchema
+          USER_INTERACTION_TABLE: !Ref UserInteractionTbl
+          CONTENT_INTERACTION_TABLE: !Ref ContentInteractionTbl
+          COMMENT_TABLE: !Ref CommentTbl
           APPLICATION_TAG: !Ref Application
           ENVIRONMENT_TAG: !Ref Environment
       MemorySize: 128
