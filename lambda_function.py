@@ -69,6 +69,7 @@ def lambda_handler(*_):
         'UNIQUE KEY contentIdFlaggerUserIdUQ (contentId,flaggerUserId)'
         ')'
     ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
+    LOGGER.info('Flag OK')
 
     # Create Unclogger Prompt table
     execute_statement((
@@ -88,6 +89,7 @@ def lambda_handler(*_):
         'UNIQUE KEY categoryBodyLanguageUQ (category,body,language)'
         ')'
     ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
+    LOGGER.info('UncloggerPrompts OK')
 
     # Create User Interaction table
     execute_statement((
@@ -103,6 +105,7 @@ def lambda_handler(*_):
         'INDEX (targetUserId)'
         ')'
     ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+    LOGGER.info('UserInteractions OK')
 
     # Create Content Interaction table
     execute_statement((
@@ -120,6 +123,7 @@ def lambda_handler(*_):
         'INDEX (contentId)'
         ')'
     ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+    LOGGER.info('Content Interactions OK')
 
     # Create Comment table
     execute_statement((
@@ -135,3 +139,4 @@ def lambda_handler(*_):
         'INDEX (contentId)'
         ')'
     ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+    LOGGER.info('Comments OK')
