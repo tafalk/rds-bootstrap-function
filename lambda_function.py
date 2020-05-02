@@ -8,27 +8,28 @@ APPROVAL_DB_NAME = os.getenv('APPROVAL_DB_NAME')
 INTERACTION_DB_NAME = os.getenv('INTERACTION_DB_NAME')
 APPROVAL_DB_SCHEMA_NAME = os.getenv('APPROVAL_DB_SCHEMA_NAME')
 INTERACTION_DB_SCHEMA_NAME = os.getenv('INTERACTION_DB_SCHEMA_NAME')
-DB_CLUSTER_ARN = os.getenv('APPROVAL_DB_CLUSTER_ARN')
+APPROVAL_DB_CLUSTER_ARN = os.getenv('APPROVAL_DB_CLUSTER_ARN')
+INTERACTION_DB_CLUSTER_ARN = os.getenv('INTERACTION_DB_CLUSTER_ARN')
 DB_CREDENTIALS_SECRETS_STORE_ARN = os.getenv('CREDENTIALS_SECRET')
 RDS_CLIENT = boto3.client('rds-data')
 
 
-def execute_statement_no_db(sql, schema_name):
+def execute_statement_no_db(sql, db_cluster_arn, schema_name):
     """ Executes SQL Statement w/o DB """
     return RDS_CLIENT.execute_statement(
         secretArn=DB_CREDENTIALS_SECRETS_STORE_ARN,
-        resourceArn=DB_CLUSTER_ARN,
+        resourceArn=db_cluster_arn,
         sql=sql,
         schema=schema_name
     )
 
 
-def execute_statement(sql, schema_name, db_name):
+def execute_statement(sql, db_cluster_arn, schema_name, db_name):
     """ Executes SQL Statement """
     return RDS_CLIENT.execute_statement(
         secretArn=DB_CREDENTIALS_SECRETS_STORE_ARN,
         database=db_name,
-        resourceArn=DB_CLUSTER_ARN,
+        resourceArn=db_cluster_arn,
         sql=sql,
         schema=schema_name
     )
@@ -45,9 +46,15 @@ def lambda_handler(*_):
 
     # create MySQL databases
     execute_statement_no_db(
-        f'CREATE DATABASE IF NOT EXISTS {APPROVAL_DB_NAME}', APPROVAL_DB_SCHEMA_NAME)
+        f'CREATE DATABASE IF NOT EXISTS {APPROVAL_DB_NAME}',
+        APPROVAL_DB_CLUSTER_ARN,
+        APPROVAL_DB_SCHEMA_NAME
+    )
     execute_statement_no_db(
-        f'CREATE DATABASE IF NOT EXISTS {INTERACTION_DB_NAME}', INTERACTION_DB_SCHEMA_NAME)
+        f'CREATE DATABASE IF NOT EXISTS {INTERACTION_DB_NAME}',
+        INTERACTION_DB_CLUSTER_ARN,
+        INTERACTION_DB_SCHEMA_NAME
+    )
 
     # Create Flag table
     execute_statement((
@@ -68,7 +75,7 @@ def lambda_handler(*_):
         'PRIMARY KEY (id),'
         'UNIQUE KEY contentIdFlaggerUserIdUQ (contentId,flaggerUserId)'
         ')'
-    ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
+    ), APPROVAL_DB_CLUSTER_ARN, APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
     LOGGER.info('Flag OK')
 
     # Create Unclogger Prompt table
@@ -88,7 +95,7 @@ def lambda_handler(*_):
         'PRIMARY KEY (id),'
         'UNIQUE KEY categoryBodyLanguageUQ (category,body,language)'
         ')'
-    ), APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
+    ), APPROVAL_DB_CLUSTER_ARN, APPROVAL_DB_SCHEMA_NAME, APPROVAL_DB_NAME)
     LOGGER.info('UncloggerPrompts OK')
 
     # Create User Interaction table
@@ -104,7 +111,7 @@ def lambda_handler(*_):
         'INDEX (actorUserId),'
         'INDEX (targetUserId)'
         ')'
-    ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+    ), INTERACTION_DB_CLUSTER_ARN, INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
     LOGGER.info('UserInteractions OK')
 
     # Create Content Interaction table
@@ -122,7 +129,7 @@ def lambda_handler(*_):
         'INDEX (userId),'
         'INDEX (contentId)'
         ')'
-    ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+    ), INTERACTION_DB_CLUSTER_ARN, INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
     LOGGER.info('Content Interactions OK')
 
     # Create Comment table
@@ -138,5 +145,5 @@ def lambda_handler(*_):
         'INDEX (userId),'
         'INDEX (contentId)'
         ')'
-    ), INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
+    ), INTERACTION_DB_CLUSTER_ARN, INTERACTION_DB_SCHEMA_NAME, INTERACTION_DB_NAME)
     LOGGER.info('Comments OK')
