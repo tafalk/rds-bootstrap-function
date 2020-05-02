@@ -6,19 +6,35 @@ Parameters:
     Type: String
   CredentialsSecret:
     Type: String
-  Endpoint:
+  ApprDbAddress:
     Type: String
-  Port:
+  ApprDbPort:
     Type: String
-  ApprovalDbClusterArn:
+  IntactDbAddress:
     Type: String
-  ApprovalDbName:
+  IntactDbPort:
     Type: String
-  ApprovalDbSchemaName:
+  ApprDbArn:
     Type: String
-  FlagTable:
+  ApprDbName:
     Type: String
-  UncloggerPromptTable:
+  ApprDbSchema:
+    Type: String
+  FlagTbl:
+    Type: String
+  UncloggerPromptTbl:
+    Type: String
+  IntactDbArn:
+    Type: String
+  IntactDbName:
+    Type: String
+  IntactDbSchema:
+    Type: String
+  UserInteractionTbl:
+    Type: String
+  ContentInteractionTbl:
+    Type: String
+  CommentTbl:
     Type: String
   Environment:
     Type: String
@@ -35,13 +51,21 @@ Resources:
       Environment:
         Variables:
           CREDENTIALS_SECRET: !Ref CredentialsSecret
-          DB_ENDPOINT: !Ref Endpoint
-          DB_PORT: !Ref Port
-          APPROVAL_DB_CLUSTER_ARN: !Ref ApprovalDbClusterArn
-          APPROVAL_DB_NAME: !Ref ApprovalDbName
-          APPROVAL_DB_SCHEMA_NAME: !Ref ApprovalDbSchemaName
-          FLAG_TABLE: !Ref FlagTable
-          UNCLOGGER_PROMPT_TABLE: !Ref UncloggerPromptTable
+          APPROVAL_DB_ADDRESS: !Ref ApprDbAddress
+          APPROVAL_DB_PORT: !Ref ApprDbPort
+          INTERACTION_DB_ADDRESS: !Ref IntactDbAddress
+          INTERACTION_DB_PORT: !Ref IntactDbPort
+          APPROVAL_DB_CLUSTER_ARN: !Ref ApprDbArn
+          APPROVAL_DB_NAME: !Ref ApprDbName
+          APPROVAL_DB_SCHEMA_NAME: !Ref ApprDbSchema
+          FLAG_TABLE: !Ref FlagTbl
+          UNCLOGGER_PROMPT_TABLE: !Ref UncloggerPromptTbl
+          INTERACTION_DB_CLUSTER_ARN: !Ref IntactDbArn
+          INTERACTION_DB_NAME: !Ref IntactDbName
+          INTERACTION_DB_SCHEMA_NAME: !Ref IntactDbSchema
+          USER_INTERACTION_TABLE: !Ref UserInteractionTbl
+          CONTENT_INTERACTION_TABLE: !Ref ContentInteractionTbl
+          COMMENT_TABLE: !Ref CommentTbl
           APPLICATION_TAG: !Ref Application
           ENVIRONMENT_TAG: !Ref Environment
       MemorySize: 128
