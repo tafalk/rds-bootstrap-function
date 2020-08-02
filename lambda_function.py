@@ -62,6 +62,7 @@ def lambda_handler(*_):
         'id varchar(200) NOT NULL,'
         'contentType varchar(32) NOT NULL,'
         'contentId varchar(128) NOT NULL,'
+        'parentContentId varchar(128),'
         'flaggerUserId varchar(128) NOT NULL,'
         'category varchar(128) NOT NULL,'
         'type varchar(128) NOT NULL,'
